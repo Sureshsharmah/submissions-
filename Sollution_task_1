@@ -1,0 +1,28 @@
+import pandas as pd
+import numpy as np
+
+def get_type_count(file_path):
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv(file_path)
+
+    # Add a new column 'car_type' based on the specified conditions
+    conditions = [
+        (df['car'] <= 15),
+        ((df['car'] > 15) & (df['car'] <= 25)),
+        (df['car'] > 25)
+    ]
+    choices = ['low', 'medium', 'high']
+    df['car_type'] = pd.Series(np.select(conditions, choices), dtype='category')
+
+    # Calculate the count of occurrences for each car_type category
+    type_counts = df['car_type'].value_counts().to_dict()
+
+    # Sort the dictionary alphabetically based on keys
+    type_counts_sorted = dict(sorted(type_counts.items()))
+
+    return type_counts_sorted
+
+# Example usage:
+file_path = 'E:\Suresh task\dataset-1.csv'
+result_dict = get_type_count(file_path)
+print(result_dict)
